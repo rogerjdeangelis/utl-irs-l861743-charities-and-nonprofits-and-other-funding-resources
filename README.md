@@ -12,6 +12,8 @@ IRS l861743 charities and nonprofits and other funding resources
     R package
     https://github.com/Nonprofit-Open-Data-Collective/irs-exempt-org-business-master-file
 
+    https://github.com/Nonprofit-Open-Data-Collective
+
       Resources
 
        1 IRS non-profits                       (download from onedrive https://tinyurl.com/3cpr5mtz0
