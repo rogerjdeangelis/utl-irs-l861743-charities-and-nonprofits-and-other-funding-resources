@@ -7,6 +7,8 @@ IRS l861743 charities and nonprofits and other funding resources
 github
 https://tinyurl.com/55mne2f
 https://github.com/rogerjdeangelis/utl-irs-l861743-charities-and-nonprofits-and-other-funding-resources
+R package
+https://github.com/Nonprofit-Open-Data-Collective/irs-exempt-org-business-master-file
 
   Resources
 
