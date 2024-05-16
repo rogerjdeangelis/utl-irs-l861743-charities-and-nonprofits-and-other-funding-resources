@@ -10,6 +10,8 @@ https://github.com/rogerjdeangelis/utl-irs-l861743-charities-and-nonprofits-and-
 R package
 https://github.com/Nonprofit-Open-Data-Collective/irs-exempt-org-business-master-file
 
+https://github.com/Nonprofit-Open-Data-Collective
+
   Resources
 
    1 IRS non-profits                       (download from onedrive https://tinyurl.com/3cpr5mtz0
