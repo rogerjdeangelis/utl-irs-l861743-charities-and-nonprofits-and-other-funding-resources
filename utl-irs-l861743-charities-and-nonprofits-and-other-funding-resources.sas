@@ -45,74 +45,74 @@ https://en.wikipedia.org/w/index.php?title=list_of_charitable_foundations
 |_|
 */
 
-/***************************************************************************************************************************/
-/*                               |                                     |                                                   */
-/*          INPUT                |             PROCESS                 |                   OUTPUT                          */
-/*                               |                                     |                                                   */
-/*                               |                                     |                                                   */
-/* You need to createa folder    | libname library "d:/dnr";           | Middle Observation(930,871 ) table=dnr.dnr_irsall */
-/* I use d:/dnr                  |                                     |  - Total Obs 1,861,743                            */
-/*                               | proc format                         |                                                   */
-/* you need to download          |     cntlin=dnr.dnr_irsmjrmnr_cntlin | ORGTYPE          $64   03 Charitable, Educational */
-/* and unzip dnr_eos.exe         |    library=dnr.formats;             | MAJOR            $53   L Housing & Shelter        */
-/*                               | run;quit;                           | MINOR            $124  L80 Housing Support        */
-/* dnr_eos.exe                   |                                     | EIN              $9    921270514                  */
-/*   self extracting             | * insert inline format below;       | NAME             $70   HEALING HEROES PURPOSES OF */
-/*   comma delimited IRS         |                                     | ICO              $35                              */
-/*   charities and non-profits   | data tst;                           | STREET           $35   5103 FAIRVISTA DR          */
-/*                               |  x=put('W30',$NTEE2MJRMNR.);        | CITY             $22   CHARLOTTE                  */
-/* dnr_irsmjrmnr_cntlin.sas7bdat |  put x=;                            | STATE            $5    NC                         */
-/*   format cntlin dataset       | run;quit;                           | ZIP              $10   28269-0637                 */
-/*                               |                                     | GROUP            $5    0000                       */
-/* Inline format $org2type       | data dnr.dnr_irsall;                | SUBSECTION       $10   03                         */
-/* see below                     |                                     | AFFILIATION      $11   3                          */
-/*                               |  retain orgtype major minor;        | CLASSIFICATION   $14   1000                       */
-/*                               |                                     | RULING           $6    202308                     */
-/*                               |  informat                           | DEDUCTIBILITY    $13   1                          */
-/*                               |    EIN NAME ICO STREET CITY STATE   | FOUNDATION       $10   15                         */
-/*                               |    ZIP GROUP SUBSECTION AFFILIATION | ACTIVITY         $9    000000000                  */
-/*                               |    CLASSIFICATION RULING            | ORGANIZATION     $12   1                          */
-/*                               |    DEDUCTIBILITY FOUNDATION         | STATUS           $6    01                         */
-/*                               |    ACTIVITY ORGANIZATION            | TAX_PERIOD       $10   202312                     */
-/*                               |    STATUS TAX_PERIOD ASSET_CD       | ASSET_CD         $8    0                          */
-/*                               |    INCOME_CD FILING_REQ_CD          | INCOME_CD        $9    0                          */
-/*                               |    PF_FILING_REQ_CD ACCT_PD         | FILING_REQ_CD    $13   02                         */
-/*                               |    ASSET_AMT INCOME_AMT REVENUE_AMT | PF_FILING_REQ_CD $16   0                          */
-/*                               |    NTEE_CD SORT_NAME $200.          | ACCT_PD          $7    12                         */
-/*                               |    ;                                | ASSET_AMT        $12   0                          */
-/*                               |                                     | INCOME_AMT       $12   0                          */
-/*                               |  infile "d:/dnr/dnr_eos.csv"        | REVENUE_AMT      $11   0                          */
-/*                               |      dsd delimiter=',' missover;    | NTEE_CD          $7    L80                        */
-/*                               |                                     | SORT_NAME        $35                              */
-/*                               |  input                              |                                                   */
-/*                               |    EIN NAME ICO STREET CITY STATE   |                                                   */
-/*                               |    ZIP GROUP SUBSECTION AFFILIATION |                                                   */
-/*                               |    CLASSIFICATION RULING            |                                                   */
-/*                               |    DEDUCTIBILITY FOUNDATION         |                                                   */
-/*                               |    ACTIVITY ORGANIZATION            |                                                   */
-/*                               |    STATUS TAX_PERIOD ASSET_CD       |                                                   */
-/*                               |    INCOME_CD FILING_REQ_CD          |                                                   */
-/*                               |    PF_FILING_REQ_CD ACCT_PD         |                                                   */
-/*                               |    ASSET_AMT INCOME_AMT REVENUE_AMT |                                                   */
-/*                               |    NTEE_CD SORT_NAME                |                                                   */
-/*                               |    ;                                |                                                   */
-/*                               |                                     |                                                   */
-/*                               |   major=                            |                                                   */
-/*                               |   put(substr(strip(ntee_cd),1,1)    |                                                   */
-/*                               |      ,?? $NTEE2MJRMNR.);            |                                                   */
-/*                               |                                     |                                                   */
-/*                               |   minor=put(strip(ntee_cd)          |                                                   */
-/*                               |      ,?? $NTEE2MJRMNR.);            |                                                   */
-/*                               |                                     |                                                   */
-/*                               |   orgtype=put(strip(subsection)     |                                                   */
-/*                               |    ,$org2type.);                    |                                                   */
-/*                               |                                     |                                                   */
-/*                               |   if major='OTHER' then major="";   |                                                   */
-/*                               |   if minor='OTHER' then minor="";   |                                                   */
-/*                               |                                     |                                                   */
-/*                               | run;quit;                           |                                                   */
-/*                               |                                     |                                                   */
-/***************************************************************************************************************************/
+/********************************************************************************************************************************/
+/*                               |                                         |                                                    */
+/*          INPUT                |           PROCESS                       |                  OUTPUT                            */
+/*                               |                                         |                                                    */
+/*                               |                                         |                                                    */
+/* You need to createa folder    |data dnr.dnr_irsall;                     |  Middle Observation(930870 )                       */
+/* I use d:/dnr                  |                                         |                                                    */
+/*                               | retain orgtype major minor orgdes       |   -- CHARACTER --                                  */
+/* you need to download          |   fund asset status ruling_year;        |  Variable         Typ   Value                      */
+/* and unzip dnr_eos.exe         |                                         |                                                    */
+/*                               | informat                                |  ORGTYPE          C64  03 Charitable, Educational, */
+/* dnr_eos.exe                   |   EIN NAME ICO STREET CITY STATE        |  MAJOR            C53  E Health Care               */
+/*   self extracting             |   ZIP GROUP SUBSECTION AFFILIATION      |  MINOR            C124 E19 Support N.E.C.          */
+/*   comma delimited IRS         |   CLASSIFICATION RULING                 |  ORGDES           C13  1 Corporation               */
+/*   charities and non-profits   |   DEDUCTIBILITY FOUNDATION              |  FUND             C84  15 Receivessupport from a g */
+/*                               |   ACTIVITY ORGANIZATION                 |  ASSET            C25  0 0                         */
+/* dnr_irsmjrmnr_cntlin.sas7bdat |   STATUS TAX_PERIOD ASSET_CD            |  STATUS           C40  01 Unconditional Exemption  */
+/*   format cntlin dataset       |   INCOME_CD FILING_REQ_CD               |  RULING_YEAR      C4   2023                        */
+/*                               |   PF_FILING_REQ_CD ACCT_PD              |  EIN              C9   921271491                   */
+/* Inline format $org2type       |   ASSET_AMT INCOME_AMT REVENUE_AMT      |  NAME             C70  FAITH AND COMMUNITY COMMUNI */
+/* see below                     |   NTEE_CD SORT_NAME $200.               |  ICO              C35  % ROSS BRISBON-HARRIS       */
+/*                               |   ;                                     |  STREET           C35  2911 PRESTWICK CIR          */
+/*                               |                                         |  CITY             C22  COLUMBIA                    */
+/*                               | infile "d:/dnr/dnr_eos.csv"             |  STATE            C2   SC                          */
+/*                               |     dsd delimiter=',' missover;         |  ZIP              C10  29223-2035                  */
+/*                               |                                         |  GROUP            C4   0000                        */
+/*                               | input                                   |  SUBSECTION       C2   03                          */
+/*                               |   EIN NAME ICO STREET CITY STATE        |  AFFILIATION      C1   3                           */
+/*                               |   ZIP GROUP SUBSECTION AFFILIATION      |  CLASSIFICATION   C4   1000                        */
+/*                               |   CLASSIFICATION RULING                 |  RULING           C6   202301                      */
+/*                               |   DEDUCTIBILITY FOUNDATION              |  DEDUCTIBILITY    C1   1                           */
+/*                               |   ACTIVITY ORGANIZATION                 |  FOUNDATION       C2   15                          */
+/*                               |   STATUS TAX_PERIOD ASSET_CD            |  ACTIVITY         C9   000000000                   */
+/*                               |   INCOME_CD FILING_REQ_CD               |  ORGANIZATION     C1   1                           */
+/*                               |   PF_FILING_REQ_CD ACCT_PD              |  TAX_PERIOD       C6                               */
+/*                               |   ASSET_AMT INCOME_AMT REVENUE_AMT      |  ASSET_CD         C1   0                           */
+/*                               |   NTEE_CD SORT_NAME                     |  INCOME_CD        C1   0                           */
+/*                               |   ;                                     |  FILING_REQ_CD    C2   02                          */
+/*                               |                                         |  PF_FILING_REQ_CD C1   0                           */
+/*                               |  if asset_cd ne 'ASSET_CD';             |  ACCT_PD          C2   01                          */
+/*                               |  status=put(status,$status.);           |  ASSET_AMT        C12                              */
+/*                               |  major=                                 |  INCOME_AMT       C12                              */
+/*                               |  put(substr(strip(ntee_cd),1,1)         |  REVENUE_AMT      C11                              */
+/*                               |     ,?? $NTEE2MJRMNR.);                 |  NTEE_CD          C4   E19                         */
+/*                               |                                         |  SORT_NAME        C35                              */
+/*                               |  minor=put(strip(ntee_cd)               |  AFFIL            C89  3 Independent - Independent */
+/*                               |     ,?? $NTEE2MJRMNR.);                 |  TOTOBS           C16  1,861,740                   */
+/*                               |                                         |                                                    */
+/*                               |  orgtype=put(strip(subsection)          |                                                    */
+/*                               |   ,$org2type.);                         |                                                    */
+/*                               |                                         |                                                    */
+/*                               |  orgdes=put(organization,$org2des.);    |                                                    */
+/*                               |                                         |                                                    */
+/*                               |  if major='OTHER' then major="";        |                                                    */
+/*                               |  if minor='OTHER' then minor="";        |                                                    */
+/*                               |                                         |                                                    */
+/*                               |  fund=put(foundation,$fund2des.);       |                                                    */
+/*                               |  asset=put(strip(asset_cd),$asset2amt.);|                                                    */
+/*                               |  affil=put(affiliation,$affil2des.);    |                                                    */
+/*                               |  ruling_year=substr(ruling,1,4);        |                                                    */
+/*                               |                                         |                                                    */
+/*                               |                                         |                                                    */
+/*                               |run;quit;                                |                                                    */
+/*                               |                                         |                                                    */
+/*                               |                                         |                                                    */
+/*                               |                                         |                                                    */
+/*                               |                                         |                                                    */
+/********************************************************************************************************************************/
 
 /*   _                                               __ _ _
 / | (_)_ __ ___   _ __   ___  _ __  _ __  _ __ ___  / _(_) |_ ___
@@ -177,6 +177,83 @@ proc format lib=dnr.formats;
 ;
 run;quit;
 
+proc format lib=dnr.formats;
+ value $org2des
+'1'='1 Corporation'
+'2'='2 Trust'
+'3'='3 Cooperative'
+'4'='4 Association'
+'5'='5 Other'
+other='Other'
+;
+run;quit;
+
+/*----                                                                   ----*/
+/*---- FOUNDATIONS                                                       ----*/
+/*----                                                                   ----*/
+
+proc format lib=dnr.formats;
+ value $fund2des
+'00'='00 Organizations except 501(c)(3) '
+'02'='02 Private operating foundation exempt from paying excise taxes or investment income'
+'03'='03 Private operating foundation (other) '
+'04'='04 Private nonoperating foundation '
+'09'='09 Suspense '
+'10'='10 Church '
+'11'='11 School '
+'12'='12 Hospital or medical research '
+'13'='13 Ooperates for college and is owned un it 14 Govt. unit '
+'15'='15 Receivessupport from a govt unit or public 16 Organization t '
+'16'='16 Receives < 1/3 investment unrelated business income from contributions '
+'17'='17 Operated solely to benefit organizations described in 10 through. '
+'18'='18 Organization organized and operated to test for public safety '
+other='Other'
+;
+run;quit;
+
+proc format lib=dnr.formats;
+ value $asset2amt
+'0'='0 0 '
+'1'='1 1 - 9,999 '
+'2'='2 10,000 - 24,999 '
+'3'='3 25,000 - 99,999 '
+'4'='4 100,000 - 499,999 '
+'5'='5 500,000 - 999,999 '
+'6'='6 1,000,000 - 4,999,999 '
+'7'='7 5,000,000 - 9,999,999 '
+'8'='8 10,000,000 - 49,999,999'
+'9'='9 = 50,000,000 '
+'other'='Other'
+;
+run;quit;
+
+proc format lib=dnr.formats;
+ value $affil2des
+'1'='1 Central - National, Regional '
+'2'='2 Intermediate - No group exemption National, Regional or Geographic State '
+'3'='3 Independent - Independent organization not affiliated with a National or State '
+'6'='6 Central - Parent (group ruling) not a church or 501(c)(1) organization. '
+'7'='7 Intermediate - This code is used if the organization is an group exemption intermediate '
+'8'='8 Central - Code is used if the organization is a parent (group ruling) church '
+'9'='9 Subordinate - Code is used if the organization is a subordinate in a group ruling. '
+other='Other'
+;
+run;quit;
+
+proc format lib=dnr.formats;
+ value $status
+'01'='01 Unconditional Exemption '
+'02'='02 Conditional Exemption '
+'12'='12 Trust '
+'25'='25 Terminating private foundation status '
+;
+run;quit;
+
+data tst;
+ x=put('01',$status.);
+ put x=;
+run;quit;
+
 proc format
     cntlin=dnr.dnr_irsmjrmnr_cntlin
    library=dnr.formats;
@@ -191,7 +268,8 @@ run;quit;
 
 data dnr.dnr_irsall;
 
- retain orgtype major minor;
+ retain orgtype major minor orgdes
+   fund asset status ruling_year;
 
  informat
    EIN NAME ICO STREET CITY STATE
@@ -222,6 +300,8 @@ data dnr.dnr_irsall;
    NTEE_CD SORT_NAME
    ;
 
+  if asset_cd ne 'ASSET_CD';
+  status=put(status,$status.);
   major=
   put(substr(strip(ntee_cd),1,1)
      ,?? $NTEE2MJRMNR.);
@@ -232,8 +312,16 @@ data dnr.dnr_irsall;
   orgtype=put(strip(subsection)
    ,$org2type.);
 
+  orgdes=put(organization,$org2des.);
+
   if major='OTHER' then major="";
   if minor='OTHER' then minor="";
+
+  fund=put(foundation,$fund2des.);
+  asset=put(strip(asset_cd),$asset2amt.);
+  affil=put(affiliation,$affil2des.);
+  ruling_year=substr(ruling,1,4);
+
 
 run;quit;
 
@@ -254,72 +342,48 @@ run;quit;
 
 /**************************************************************************************************************************/
 /*                                                                                                                        */
-/*   TABLE=DNR.DNR_IRSALL                                                                                                 */
+/* Middle Observation(930870 ) dnr.dnr_irsall - Total Obs 1861740                                                         */
 /*                                                                                                                        */
-/*   ORGTYPE                                                        MAJOR                                                 */
+/*  -- CHARACTER --                                                                                                       */
+/* Variable                        Typ    Value                                                                           */
 /*                                                                                                                        */
-/*   Other                                                          N Recreation & Sports                                 */
-/*   03 Charitable, Educational, Religious, Scientific Organization                                                       */
-/*   03 Charitable, Educational, Religious, Scientific Organization                                                       */
-/*   03 Charitable, Educational, Religious, Scientific Organization X Religion-Related                                    */
-/*   03 Charitable, Educational, Religious, Scientific Organization X Religion-Related                                    */
-/*   03 Charitable, Educational, Religious, Scientific Organization X Religion-Related                                    */
-/*   03 Charitable, Educational, Religious, Scientific Organization X Religion-Related                                    */
-/*   03 Charitable, Educational, Religious, Scientific Organization X Religion-Related                                    */
-/*                                                                                                                        */
-/*   MINOR                             EIN        NAME                                                                    */
-/*                                                                                                                        */
-/*                                     EIN        NAME                                                                    */
-/*                                     000019818  PALMER SECOND BAPTIST CHURCH                                            */
-/*                                     000029215  ST GEORGE CATHEDRAL                                                     */
-/*   X21 Protestant                    000587764  IGLESIA BETHESDA INC                                                    */
-/*   X21 Protestant                    000635913  MINISTERIO APOSTOLICO JESUCRISTO ES EL SENOR INC                        */
-/*   X20 Christianity                  000765634  MERCY CHAPEL INTERNATIONAL                                              */
-/*   X20 Christianity                  000841363  AGAPE HOUSE OF PRAYER                                                   */
-/*   X20 Christianity                  000852649  BETHANY PRESBYTERIAN CHURCH                                             */
-/*                                                                                                                        */
-/*   ICO                           STREET                                CITY           STATE   ZIP                       */
-/*                                                                                                                        */
-/*   ICO                           STREET                                CITY           STATE   ZIP                       */
-/*                                 1050 THORNDIKE ST                     PALMER         MA      01069-1507                */
-/*                                 523 E BROADWAY                        SOUTH BOSTON   MA      02127-4415                */
-/*                                 13 CUMMINGHAM ST                      LOWELL         MA      01852-0000                */
-/*                                 454 ESSEX ST                          LAWRENCE       MA      01840-1242                */
-/*                                 75 MORTON VILLAGE DR APT 408          MATTAPAN       MA      02126-2433                */
-/*                                 39 GOODALE RD STE 2                   MATTAPAN       MA      02126-1527                */
-/*                                 32 HARVARD ST                         BROOKLINE      MA      02445-7994                */
-/*                                                                                                                        */
-/*   GROUP SUBSECTION AFFILIATION CLASSIFICATION RULING DEDUCTIBILITY FOUNDATION ACTIVITY  ORGANIZATION                   */
-/*                                                                                                                        */
-/*   GROUP SUBSECTION AFFILIATION CLASSIFICATION RULING DEDUCTIBILITY FOUNDATION ACTIVITY  ORGANIZATION                   */
-/*   3125  03         9           7000           195504 1             10         001000000 5                              */
-/*   2365  03         9           7000           197210 1             10         001000000 1                              */
-/*   0000  03         3           7000           200401 1             10         000000000 1                              */
-/*   0000  03         3           7000           200401 1             10         000000000 1                              */
-/*   0000  03         3           7000           200404 1             10         000000000 1                              */
-/*   0000  03         3           1700           200412 1             10         000000000 1                              */
-/*   0000  03         3           7000           200504 1             10         000000000 1                              */
-/*                                                                                                                        */
-/*   STATUS  TAX_PERIOD  ASSET_CD  INCOME_CD  FILING_REQ_CD  PF_FILING_REQ_CD  ACCT_PD  ASSET_AMT  INCOME_AMT             */
-/*                                                                                                                        */
-/*   STATUS  TAX_PERIOD  ASSET_CD  INCOME_CD  FILING_REQ_CD  PF_FILING_REQ_CD  ACCT_PD  ASSET_AMT  INCOME_AMT             */
-/*   01                  0         0          06             0                 12                                         */
-/*   01                  0         0          06             0                 12                                         */
-/*   01                  0         0          06             0                 12                                         */
-/*   01                  0         0          06             0                 12                                         */
-/*   01                  0         0          06             0                 12                                         */
-/*   01                  0         0          06             0                 12                                         */
-/*   01                  0         0          06             0                 12                                         */
-/*                                                                                                                        */
-/*   REVENUE_AMT    NTEE_CD    SORT_NAME                                                                                  */
-/*                                                                                                                        */
-/*   REVENUE_AMT    NTEE_CD    SORT_NAME                                                                                  */
-/*                             3514                                                                                       */
-/*                                                                                                                        */
-/*                  X21                                                                                                   */
-/*                  X21                                                                                                   */
-/*                  X20                                                                                                   */
-/*                  X20                                                                                                   */
+/* ORGTYPE                          C64   03 Charitable, Educational,                                                     */
+/* MAJOR                            C53   E Health Care                                                                   */
+/* MINOR                            C124  E19 Support N.E.C.                                                              */
+/* ORGDES                           C13   1 Corporation                                                                   */
+/* FUND                             C84   15 Receivessupport from a g                                                     */
+/* ASSET                            C25   0 0                                                                             */
+/* STATUS                           C40   01 Unconditional Exemption                                                      */
+/* RULING_YEAR                      C4    2023                                                                            */
+/* EIN                              C9    921271491                                                                       */
+/* NAME                             C70   FAITH AND COMMUNITY COMMUNI                                                     */
+/* ICO                              C35   % ROSS BRISBON-HARRIS                                                           */
+/* STREET                           C35   2911 PRESTWICK CIR                                                              */
+/* CITY                             C22   COLUMBIA                                                                        */
+/* STATE                            C2    SC                                                                              */
+/* ZIP                              C10   29223-2035                                                                      */
+/* GROUP                            C4    0000                                                                            */
+/* SUBSECTION                       C2    03                                                                              */
+/* AFFILIATION                      C1    3                                                                               */
+/* CLASSIFICATION                   C4    1000                                                                            */
+/* RULING                           C6    202301                                                                          */
+/* DEDUCTIBILITY                    C1    1                                                                               */
+/* FOUNDATION                       C2    15                                                                              */
+/* ACTIVITY                         C9    000000000                                                                       */
+/* ORGANIZATION                     C1    1                                                                               */
+/* TAX_PERIOD                       C6                                                                                    */
+/* ASSET_CD                         C1    0                                                                               */
+/* INCOME_CD                        C1    0                                                                               */
+/* FILING_REQ_CD                    C2    02                                                                              */
+/* PF_FILING_REQ_CD                 C1    0                                                                               */
+/* ACCT_PD                          C2    01                                                                              */
+/* ASSET_AMT                        C12                                                                                   */
+/* INCOME_AMT                       C12                                                                                   */
+/* REVENUE_AMT                      C11                                                                                   */
+/* NTEE_CD                          C4    E19                                                                             */
+/* SORT_NAME                        C35                                                                                   */
+/* AFFIL                            C89   3 Independent - Independent                                                     */
+/* TOTOBS                           C16   1,861,740                                                                       */
 /*                                                                                                                        */
 /**************************************************************************************************************************/
 
