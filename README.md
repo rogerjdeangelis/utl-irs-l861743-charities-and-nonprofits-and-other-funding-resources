@@ -1,7 +1,6 @@
 # utl-irs-l861743-charities-and-nonprofits-and-other-funding-resources
 IRS l861743 charities and nonprofits and other funding resources 
-    %let pgm=utl-irs-l861743-charities-and-nonprofits-and-other-funding-resources;
-
+     
     IRS l861743 charities and nonprofits and other funding resources
 
     %stop_submission;
